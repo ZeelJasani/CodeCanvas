@@ -121,3 +121,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-dot-pattern {
+    background-image: radial-gradient(#334155 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

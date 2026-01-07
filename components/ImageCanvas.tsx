@@ -2,13 +2,15 @@ import { cn } from "@/lib/utils";
 import { usePreferencesStore } from "@/store/use-preferences-store";
 import WindowControls from "@/components/WindowControls";
 
+import BrowserWindowHeader from "@/components/BrowserWindowHeader";
+
 export default function ImageCanvas() {
     const store = usePreferencesStore();
 
     return (
         <div
             className={cn(
-                "rounded-xl shadow-2xl transition-all",
+                "rounded-xl shadow-2xl transition-all overflow-hidden flex flex-col",
                 store.darkMode
                     ? "bg-black/75 border-gray-600/40"
                     : "bg-white/75 border-gray-200/20"
@@ -16,40 +18,52 @@ export default function ImageCanvas() {
             style={{
                 borderWidth: `${store.imageBorderWidth}px`,
                 borderStyle: 'solid',
-                // Preserve transparency logic or color if set previously?
-                // The user unified styling, so we stick to the classNames for color,
-                // but use inline style for width.
                 borderColor: store.darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.2)'
             }}
         >
-            <header className="grid grid-cols-6 gap-3 items-center px-4 py-3">
-                <WindowControls
-                    style={store.windowControlStyle}
-                    size={store.windowScale}
-                />
-                {/* Filename input removed as requested */}
-            </header>
+            {store.windowControlStyle === "macos" ? (
+                <BrowserWindowHeader width={0} />
+            ) : (
+                <header className="grid grid-cols-6 gap-3 items-center px-4 py-3">
+                    <WindowControls
+                        style={store.windowControlStyle}
+                        size={store.windowScale}
+                    />
+                </header>
+            )}
+
             <div
                 className={cn(
-                    "px-4 pb-4 min-h-[300px] flex items-center justify-center",
-                    store.darkMode
+                    "flex items-center justify-center overflow-hidden",
+                    // If using browser header, we want full width image usually? 
+                    // But user might want padding inside the browser window?
+                    // The reference image shows the image content (the website content) filling the window.
+                    // So we might remove px-4 pb-4 if macos style?
+                    // Let's keep it safe but maybe reduce padding for 'browser' feel if desired.
+                    // Actually standard screenshot tools usually have no padding inside the browser frame around the viewport content.
+                    store.windowControlStyle === "macos" ? "p-0 bg-white" : "px-4 pb-4",
+
+                    store.darkMode && store.windowControlStyle !== "macos"
                         ? "brightness-110"
-                        : "text-gray-800 brightness-50 saturate-200 contrast-200"
+                        : "",
+                    !store.darkMode && store.windowControlStyle !== "macos"
+                        ? "text-gray-800 brightness-50 saturate-200 contrast-200"
+                        : ""
                 )}
             >
                 {store.imageUrl ? (
                     <img
                         src={store.imageUrl}
                         alt={store.title}
-                        className="rounded-lg"
+                        className={store.windowControlStyle === "macos" ? "w-full h-auto object-cover" : "rounded-lg"}
                         style={{
                             maxWidth: "100%",
-                            maxHeight: "600px",
+                            maxHeight: "800px", // Increased max height for browser view
                             objectFit: store.imageObjectFit,
                         }}
                     />
                 ) : (
-                    <div className="text-center text-gray-500">
+                    <div className="text-center text-gray-500 p-8">
                         <svg
                             className="mx-auto h-12 w-12 text-gray-400"
                             stroke="currentColor"

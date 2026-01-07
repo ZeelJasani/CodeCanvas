@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 // export const usePreferencesStore = create(
 //   persist(
@@ -47,9 +47,12 @@ interface PreferencesState {
   windowScale: number;
 
   // Image border customization
+  // Image border customization
   imageBorderColor: string;
   imageBorderWidth: number;
   imageBackgroundColor: string;
+  browserUrl: string;
+  windowTheme: "light" | "dark"; // Separate toggle for window theme
 
 
   // Setters
@@ -71,6 +74,8 @@ interface PreferencesState {
   setImageBorderColor: (color: string) => void;
   setImageBorderWidth: (width: number) => void;
   setImageBackgroundColor: (color: string) => void;
+  setBrowserUrl: (url: string) => void;
+  setWindowTheme: (theme: "light" | "dark") => void;
 }
 
 // Create a persistent Zustand store with type safety and update methods
@@ -103,6 +108,8 @@ export const usePreferencesStore = create<PreferencesState>()(
       imageBorderColor: "#4b5563", // gray-600
       imageBorderWidth: 2,
       imageBackgroundColor: "#1f2937", // gray-800
+      browserUrl: "postra.app",
+      windowTheme: "light", // Default to light like the reference
 
       // Setters
       setCode: (code) => set({ code }),
@@ -124,9 +131,13 @@ export const usePreferencesStore = create<PreferencesState>()(
       setImageBorderColor: (color) => set({ imageBorderColor: color }),
       setImageBorderWidth: (width) => set({ imageBorderWidth: width }),
       setImageBackgroundColor: (color) => set({ imageBackgroundColor: color }),
+      setBrowserUrl: (url) => set({ browserUrl: url }),
+      setWindowTheme: (theme) => set({ windowTheme: theme }),
     }),
     {
       name: "user-preferences", // Key used in localStorage
+      storage: createJSONStorage(() => localStorage),
+      skipHydration: true,
     }
   )
 );

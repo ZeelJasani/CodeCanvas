@@ -26,11 +26,15 @@ import ImageUploader from "@/components/controls/ImageUploader";
 import WindowControlSelect from "@/components/controls/WindowControlSelect";
 import ImageObjectFitSelect from "@/components/controls/ImageObjectFitSelect";
 import WindowScaleSlider from "@/components/controls/WindowScaleSlider";
+import WindowThemeSwitch from "@/components/controls/WindowThemeSwitch";
 import FrameWidthSlider from "@/components/controls/FrameWidthSlider";
+
+import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen, Settings } from "lucide-react";
 
 function App() {
   const [width, setWidth] = useState("auto");
   const [showWidth, setShowWidth] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const theme = usePreferencesStore((state) => state.theme);
   const padding = usePreferencesStore((state) => state.padding);
@@ -56,8 +60,15 @@ function App() {
     });
   }, []);
 
+  // Close sidebar on mobile initially
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  }, []);
+
   return (
-    <main className="dark min-h-screen flex flex-col gap-4 justify-center items-center bg-neutral-950 text-white p-4">
+    <main className="dark min-h-screen flex bg-neutral-950 text-white font-sans selection:bg-neutral-800 relative overflow-hidden">
       <link
         rel="stylesheet"
         href={themes[theme as keyof typeof themes].theme}
@@ -69,73 +80,195 @@ function App() {
         crossOrigin="anonymous"
       />
 
-      <div className="w-full overflow-auto flex grow items-center justify-center p-4 border rounded-xl border-b-gray-900">
-        <Resizable
-          enable={{ left: true, right: true }}
-          minWidth={padding * 2 + 300}
-          maxWidth="100%"
-          size={{ width }}
-          onResize={(e, dir, ref) => setWidth(ref.offsetWidth.toString())}
-          onResizeStart={() => setShowWidth(true)}
-          onResizeStop={() => setShowWidth(false)}
-        >
-          <div
-            className={cn(
-              "overflow-hidden mb-2 transition-all ease-out",
-              showBackground
-                ? themes[theme as keyof typeof themes].background
-                : "ring ring-neutral-900"
-            )}
-            style={{ padding }}
-            ref={editorRef}
+      {/* Center Workspace */}
+      <div
+        className={cn(
+          "flex-1 min-h-screen flex flex-col items-center justify-center p-8 relative transition-all duration-300 ease-in-out",
+          isSidebarOpen ? "lg:pl-[340px]" : "pl-8" // Push content on desktop
+        )}
+      >
+        <div className="w-full h-full flex justify-center items-center scrollbar-hide">
+          <Resizable
+            enable={{ left: true, right: true }}
+            minWidth={padding * 2 + 300}
+            maxWidth="100%"
+            size={{ width }}
+            onResize={(e, dir, ref) => setWidth(ref.offsetWidth.toString())}
+            onResizeStart={() => setShowWidth(true)}
+            onResizeStop={() => setShowWidth(false)}
+            className="flex flex-col items-center justify-center"
           >
-            {!imageUrl ? <CodeEditor /> : <ImageCanvas />}
-          </div>
-          <WidthMeasurement showWidth={showWidth} width={Number(width)} />
-          <div
-            className={cn(
-              "transition-opacity w-fit mx-auto -mt-4",
-              showWidth || width === "auto"
-                ? "invisible opacity-0 hidden"
-                : "visible opacity-100"
-            )}
-          >
-            <Button size="sm" onClick={() => setWidth("auto")} variant="ghost">
-              <ResetIcon className="mr-2" />
-              Reset width
-            </Button>
-          </div>
-        </Resizable>
+            <div
+              className={cn(
+                "overflow-hidden mb-2 transition-all ease-out",
+                showBackground
+                  ? themes[theme as keyof typeof themes].background
+                  : ""
+              )}
+              style={{ padding }}
+              ref={editorRef}
+            >
+              {!imageUrl ? <CodeEditor /> : <ImageCanvas />}
+            </div>
+            <WidthMeasurement showWidth={showWidth} width={Number(width)} />
+            <div
+              className={cn(
+                "transition-opacity w-fit mx-auto -mt-4",
+                showWidth || width === "auto"
+                  ? "invisible opacity-0 hidden"
+                  : "visible opacity-100"
+              )}
+            >
+              <Button
+                size="sm"
+                onClick={() => setWidth("auto")}
+                variant="ghost"
+                className="text-muted-foreground hover:text-white"
+              >
+                <ResetIcon className="mr-2" />
+                Reset width
+              </Button>
+            </div>
+          </Resizable>
+        </div>
       </div>
 
-      <Card className="p-6 w-fit bg-neutral-900/90 backdrop-blur">
-        <CardContent className="flex flex-wrap gap-4 sm:gap-6 p-0">
-          <ImageUploader />
-          <ThemeSelect />
-          {!imageUrl && (
-            <>
-              <LanguageSelect />
-              <FontSelect />
-              <FontSizeInput />
-            </>
-          )}
-          {!!imageUrl && <ImageObjectFitSelect />}
-          <WindowScaleSlider />
-          <FrameWidthSlider />
-          <PaddingSlider />
-          <BackgroundSwitch />
-          <DarkModeSwitch />
-          <WindowControlSelect />
-          <div className="w-px bg-neutral-800" />
-          <div className="place-self-center">
-            <ExportOptions
-              targetRef={
-                editorRef as unknown as React.RefObject<HTMLDivElement>
-              }
-            />
+      {/* Toggle Button (Floating - Only visible when closed) */}
+      <div
+        className={cn(
+          "fixed top-4 left-4 z-30 transition-all duration-300",
+          isSidebarOpen ? "opacity-0 invisible -translate-x-full" : "opacity-100 visible translate-x-0"
+        )}
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          className="bg-neutral-900 border-neutral-800 shadow-md hover:bg-neutral-800"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          <PanelLeftOpen className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Left Sidebar Controls */}
+      <aside
+        className={cn(
+          "w-[320px] bg-neutral-900 border-r border-neutral-800 flex flex-col h-screen fixed top-0 left-0 z-20 shadow-2xl overflow-hidden transition-transform duration-300 ease-in-out",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-neutral-800 bg-neutral-900 shrink-0 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <div className="h-5 w-5 rounded bg-gradient-to-br from-indigo-500 to-purple-600 shadow-inner" />
+              <h1 className="font-bold text-base tracking-tight">CodeCanvas</h1>
+            </div>
+            <p className="text-[10px] text-neutral-500 font-medium">
+              Create beautiful snippets
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-neutral-400 hover:text-white"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Controls Content - Scrollable but hidden scrollbar */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-5">
+          {/* Content Section */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Content
+            </h3>
+            <div className="space-y-3">
+              <ImageUploader />
+              {!imageUrl && <LanguageSelect />}
+            </div>
+          </div>
+
+          <div className="h-px bg-neutral-800" />
+
+          {/* Style Section */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Style
+            </h3>
+            <div className="space-y-3">
+              <ThemeSelect />
+              <div className="grid grid-cols-2 gap-2">
+                <BackgroundSwitch />
+                <DarkModeSwitch />
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-neutral-800" />
+
+          {/* Code Properties Section */}
+          {!imageUrl && (
+            <div className="space-y-3">
+              <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+                Typography
+              </h3>
+              <div className="space-y-3">
+                <FontSelect />
+                <FontSizeInput />
+              </div>
+              <div className="h-px bg-neutral-800 my-3" />
+            </div>
+          )}
+
+          {/* Image Properties Section */}
+          {!!imageUrl && (
+            <div className="space-y-3">
+              <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+                Image
+              </h3>
+              <ImageObjectFitSelect />
+              <div className="h-px bg-neutral-800 my-3" />
+            </div>
+          )}
+
+          {/* Window Section */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Window
+            </h3>
+            <div className="space-y-3">
+              <WindowControlSelect />
+              <div className="grid grid-cols-2 gap-2">
+                <WindowThemeSwitch />
+                <WindowScaleSlider />
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-neutral-800" />
+
+          {/* Frame Section */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Frame
+            </h3>
+            <div className="space-y-3">
+              <PaddingSlider />
+              <FrameWidthSlider />
+            </div>
+          </div>
+        </div>
+
+        {/* Fixed Footer */}
+        <div className="p-4 border-t border-neutral-800 bg-neutral-900 shrink-0">
+          <ExportOptions
+            targetRef={editorRef as unknown as React.RefObject<HTMLDivElement>}
+          />
+        </div>
+      </aside>
     </main>
   );
 }

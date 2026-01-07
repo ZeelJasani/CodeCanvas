@@ -39,3 +39,7 @@
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+
+git add .
+git commit -m "fix: update next.js to 16.1.1 and remove deprecated eslint config"
+git push

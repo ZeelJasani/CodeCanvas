@@ -2,8 +2,7 @@
 
 **CodeCanvas** is a beautiful, feature-rich tool for creating stunning code snippets and browser mockups. It transforms your code and screenshots into shareable, professional-grade images with a highly customizable studio interface.
 
-![CodeCanvas Demo](https://github.com/ZeelJasani/CodeCanvas/raw/main/public/demo.png)
-*(Note: Add a `demo.png` to your public folder to show off a screenshot here)*
+![CodeCanvas Demo](public/codecanvas-layout.png)
 
 ## ✨ Features
 

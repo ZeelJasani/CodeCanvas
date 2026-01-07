@@ -28,6 +28,7 @@ import ImageObjectFitSelect from "@/components/controls/ImageObjectFitSelect";
 import WindowScaleSlider from "@/components/controls/WindowScaleSlider";
 import WindowThemeSwitch from "@/components/controls/WindowThemeSwitch";
 import FrameWidthSlider from "@/components/controls/FrameWidthSlider";
+import BrowserUrlInput from "@/components/controls/BrowserUrlInput";
 
 import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen, Settings } from "lucide-react";
 
@@ -240,6 +241,7 @@ function App() {
               Window
             </h3>
             <div className="space-y-3">
+              <BrowserUrlInput />
               <WindowControlSelect />
               <div className="grid grid-cols-2 gap-2">
                 <WindowThemeSwitch />

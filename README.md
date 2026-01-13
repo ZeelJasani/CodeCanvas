@@ -1,8 +1,8 @@
-# CodeCanvas 🎨
+# SyntaxShot 🎨
 
-**CodeCanvas** is a beautiful, feature-rich tool for creating stunning code snippets and browser mockups. It transforms your code and screenshots into shareable, professional-grade images with a highly customizable studio interface.
+**SyntaxShot** is a beautiful, feature-rich tool for creating stunning code snippets and browser mockups. It transforms your code and screenshots into shareable, professional-grade images with a highly customizable studio interface.
 
-![CodeCanvas Demo](public/codecanvas-layout.png)
+![SyntaxShot Demo](public/SyntaxShot-layout.png)
 
 ## ✨ Features
 

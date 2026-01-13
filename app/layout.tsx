@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeCanvas",
+  title: "SyntaxShot",
   description:
     "Create stunning code snippets and realistic browser mockups with a highly customizable studio interface.",
 };

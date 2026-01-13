@@ -162,8 +162,8 @@ function App() {
         <div className="p-4 border-b border-neutral-800 bg-neutral-900 shrink-0 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <img src="/CodeCanvas.png" alt="CodeCanvas Logo" className="h-6 w-6 rounded-sm shadow-sm" />
-              <h1 className="font-bold text-base tracking-tight">CodeCanvas</h1>
+              <img src="/SyntaxShot.png" alt="SyntaxShot Logo" className="h-6 w-6 rounded-sm shadow-sm" />
+              <h1 className="font-bold text-base tracking-tight">SyntaxShot</h1>
             </div>
             <p className="text-[10px] text-neutral-500 font-medium">
               Create beautiful snippets

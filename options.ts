@@ -1,3 +1,5 @@
+import { Google_Sans_Code } from "next/font/google";
+
 export const languages: Record<string, string> = {
   bash: "Bash",
   c: "C",
@@ -99,6 +101,10 @@ export const fonts: Record<string, { name: string; src: string }> = {
   jetBrainsMono: {
     name: "JetBrains Mono",
     src: "https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap",
+  },
+  Google_Sans_Code: {
+    name: "Google Sans Code",
+    src: "https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap",
   },
   inconsolata: {
     name: "Inconsolata",
